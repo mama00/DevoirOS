@@ -1,0 +1,41 @@
+# depslib dependency file v1.0
+1600891937 source:c:\users\marceus\desktop\leley\scheduling\cpu.c
+	<stdio.h>
+	"task.h"
+
+1600896506 c:\users\marceus\desktop\leley\scheduling\task.h
+	<stdio.h>
+	<stdlib.h>
+
+1600897872 source:c:\users\marceus\desktop\leley\scheduling\driver.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"task.h"
+	"list.h"
+	"schedulers.h"
+	"details.h"
+
+1600892081 c:\users\marceus\desktop\leley\scheduling\list.h
+	"task.h"
+
+1600895283 c:\users\marceus\desktop\leley\scheduling\schedulers.h
+	"task.h"
+
+1600892245 c:\users\marceus\desktop\leley\scheduling\details.h
+	<stdlib.h>
+	<stdio.h>
+
+1600891981 source:c:\users\marceus\desktop\leley\scheduling\list.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"list.h"
+	"task.h"
+
+1600892221 source:c:\users\marceus\desktop\leley\scheduling\details.c
+	"details.h"
+
+1600897626 source:c:\users\marceus\desktop\leley\scheduling\schedulers.c
+	"schedulers.h"
+

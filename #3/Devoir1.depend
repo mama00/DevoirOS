@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1600898241 source:c:\users\yawyo\onedrive\documents\c\devoir1\main.c
+	<stdio.h>
+	<windows.h>
+	<string.h>
+	<stdbool.h>
+
