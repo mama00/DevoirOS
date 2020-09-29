@@ -25,14 +25,12 @@
 
 int main(int argc, char *argv[])
 {
+    // init tasks ids
+    task_id=0;
     FILE *in;
     char *temp;
     char task[SIZE];
-
-    TaskList tab_list;
-    tab_list.size_list=0;
-
-
+    Node *task_queue=NULL;
     char *name;
     int priority;
     int burst;
@@ -46,15 +44,15 @@ int main(int argc, char *argv[])
         burst = atoi(strsep(&temp,","));
 
         // add the task to the scheduler's list of tasks
-        add(name,priority,burst,&tab_list);
+        add(name,priority,burst,&task_queue);
         free(temp);
     }
 
     fclose(in);
 
     // invoke the scheduler
-    schedule(PR,&tab_list);
-
+    schedule(PRR,&task_queue);
+    traverse(task_queue);
 
 
     return 0;

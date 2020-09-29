@@ -1,134 +1,259 @@
 #include "schedulers.h"
 
 
-void add(char *name, int priority, int burst,TaskList *task_list)
+void add(char *name, int priority, int burst,Node **queue_head)
 {
-    Task temp;
-    temp.name=name;
-    temp.priority=priority;
-    temp.burst=burst;
-    task_list->task_list[task_list->size_list++]=temp;
+    Task * task=malloc(sizeof(Task));
+    task->burst=burst;
+    task->name=name;
+    task->priority=priority;
+    __sync_add_and_fetch(&task_id,1);
+    task->tid=task_id;
+    insert(queue_head,task);
 
 }
 
-void FCFS(TaskList *task_list)
+Job *PRR(Node **head_queue,Node *last_task_node)
 {
-    int i=0;
-    printf("Actual list of task \n");
 
-    for(i=0;i<task_list->size_list;i++)
+    int quantum_time=20;
+    Job *job = malloc(sizeof(Job));
+    if(last_task_node==NULL)
     {
-        printf("%s %d %d \n",task_list->task_list[i].name,task_list->task_list[i].priority,task_list->task_list[i].burst);
+        if((*head_queue)->task->priority==(*head_queue)->next->task->priority)
+        {
+            job->task_node=(*head_queue);
+            if((*head_queue)->task->burst<=quantum_time){
+                job->time=(*head_queue)->task->burst;
+                delete(head_queue,(*head_queue)->task);
+            }
+            else{
+                job->time=quantum_time;
+                (*head_queue)->task->burst-=quantum_time;
+            }
+        }
+        else
+        {
+            job->task_node=(*head_queue);
+            job->time=(*head_queue)->task->burst;
+            delete(head_queue,(*head_queue)->task);
+        }
     }
-    printf("Output for FCFS ALGORITHM\n");
+    else
+    {
+        if(last_task_node->next->next==NULL)
+        {
+            if(last_task_node->next->task->priority==(*head_queue)->task->priority)
+            {
+                job->task_node=last_task_node->next;
+                if(last_task_node->next->task->burst<=quantum_time){
+                    job->time=last_task_node->next->task->burst;
+                    delete(head_queue,last_task_node->next->task);
+                }
+                else{
+                    job->time=quantum_time;
+                    last_task_node->next->task->burst-=quantum_time;
+                }
+            }
+            else
+            {
+                job->task_node=last_task_node->next;
+                job->time=last_task_node->next->task->burst;
+                delete(head_queue,last_task_node->next->task);
+
+            }
+        }
+        else
+        {
+            if(last_task_node->next->task->priority==last_task_node->next->next->task->priority)
+            {
+                job->task_node=last_task_node->next;
+                if(last_task_node->next->task->burst<=quantum_time){
+                    job->time=last_task_node->next->task->burst;
+                    delete(head_queue,last_task_node->next->task);
+                }
+                else{
+                    job->time=quantum_time;
+                    last_task_node->next->task->burst-=quantum_time;
+                }
+            }
+            else
+            {
+                job->task_node=last_task_node->next;
+                job->time=last_task_node->next->task->burst;
+                delete(head_queue,last_task_node->next->task);
+
+            }
+        }
+
+    }
+    return job;
+}
+
+int cmp (const void * a, const void * b ) {
+    const Node **pa = (const Node**)a;
+    const Node **pb = (const Node**)b;
+    return (*pa)->task->priority-(*pb)->task->priority;
+}
+void order_by_priority(Node **head_queue)
+{
+    Node * tab_node[20]={NULL};
+    int i=0;
+    while((*head_queue)!=NULL)
+    {
+        tab_node[i]=(*head_queue);
+        i++;
+        *head_queue=(*head_queue)->next;
+    }
+    qsort(tab_node,i,sizeof(Node*),cmp);
+    *head_queue=NULL;
     i=0;
-    for(i=0;i<task_list->size_list;i++)
+    while(tab_node[i]!=NULL)
     {
-        printf("%s %d %d \n",task_list->task_list[i].name,task_list->task_list[i].priority,task_list->task_list[i].burst);
+        insert(head_queue,tab_node[i]->task);
+        i++;
     }
-
 }
 
-int cmp_sjf (const void * a, const void * b)
+
+Job *RR(Node **head_queue,Node *last_task_node)
 {
-
-  Task *orderA = (Task *)a;
-  Task *orderB = (Task *)b;
-
-  return ( orderA->burst - orderB->burst );
-}
-void SJF(TaskList *task_list)
-{
-    int i=0;
-    printf("Actual list of task \n");
-
-    for(i=0;i<task_list->size_list;i++)
+    Job * job=malloc(sizeof(Job));
+    int quantum_time=20;
+    if(*head_queue==NULL)
+        return NULL;
+    if(last_task_node!=NULL)
     {
-        printf("%s %d %d \n",task_list->task_list[i].name,task_list->task_list[i].priority,task_list->task_list[i].burst);
-    }
+        if(last_task_node->next==NULL)
+        {
+            job->task_node=*head_queue;
+            job->time=quantum_time;
+            (*head_queue)->task->burst-=quantum_time;
+            if((*head_queue)->task->burst<=0)
+            {
+                job->time=(*head_queue)->task->burst+20;
+                (*head_queue)->task->burst=0;
+                delete(head_queue,(*head_queue)->task);
 
-    qsort(task_list->task_list,task_list->size_list,sizeof(Task),cmp_sjf);
-    printf("Output for SJF ALGORITHM\n");
-    i=0;
-    for(i=0;i<task_list->size_list;i++)
+            }
+            return job;
+        }
+        else
+        {
+            job->task_node=last_task_node->next;
+            job->time=quantum_time;
+            last_task_node->next->task->burst-=quantum_time;
+            if(last_task_node->next->task->burst<=0)
+            {
+                job->time=last_task_node->next->task->burst+20;
+                last_task_node->next->task->burst=0;
+                delete(head_queue,last_task_node->next->task);
+            }
+            return job;
+        }
+
+    }
+    else
     {
-        printf("%s %d %d \n",task_list->task_list[i].name,task_list->task_list[i].priority,task_list->task_list[i].burst);
+            job->task_node=*head_queue;
+            job->time=quantum_time;
+            (*head_queue)->task->burst-=quantum_time;
+            if((*head_queue)->task->burst<=0)
+            {
+                job->time=(*head_queue)->task->burst+20;
+                (*head_queue)->task->burst=0;
+                delete(head_queue,(*head_queue)->task);
+            }
+            return job;
     }
-
 }
 
-int cmp_pr (const void * a, const void * b)
+
+Job *PR(Node **head_queue,Node *last_task_node)
 {
-
-  Task *orderA = (Task *)a;
-  Task *orderB = (Task *)b;
-
-  return ( orderB->priority - orderA->priority );
-}
-void PR(TaskList *task_list)
-{
-    int i=0;
-    printf("Actual list of task \n");
-
-    for(i=0;i<task_list->size_list;i++)
+    if(*head_queue==NULL)
+        return NULL;
+    Node *biggest_priority_node=*head_queue;
+    Node *temp=(*head_queue)->next;
+    while(temp!=NULL)
     {
-        printf("%s %d %d \n",task_list->task_list[i].name,task_list->task_list[i].priority,task_list->task_list[i].burst);
+        if(temp->task->priority>biggest_priority_node->task->priority)
+        {
+            biggest_priority_node=temp;
+        }
+        temp=temp->next;
     }
+    delete(head_queue,biggest_priority_node->task);
+    Job * job=malloc(sizeof(Job));
+    job->task_node=biggest_priority_node;
+    job->time=biggest_priority_node->task->burst;
+    return job ;
 
-    qsort(task_list->task_list,task_list->size_list,sizeof(Task),cmp_pr);
-    printf("Output for PR ALGORITHM\n");
-    i=0;
-    for(i=0;i<task_list->size_list;i++)
+}
+
+Job *SJF(Node **head_queue,Node *last_task_node)
+{
+    if(*head_queue==NULL)
+        return NULL;
+    Node *shortest_burst_node=*head_queue;
+    Node *temp=(*head_queue)->next;
+    while(temp!=NULL)
     {
-        printf("%s %d %d \n",task_list->task_list[i].name,task_list->task_list[i].priority,task_list->task_list[i].burst);
+        if(temp->task->burst<shortest_burst_node->task->burst)
+        {
+            shortest_burst_node=temp;
+        }
+        temp=temp->next;
     }
+    delete(head_queue,shortest_burst_node->task);
+    Job * job=malloc(sizeof(Job));
+    job->task_node=shortest_burst_node;
+    job->time=shortest_burst_node->task->burst;
+    return job ;
 
 }
 
-void RR(TaskList *task_list)
+Job *FCFS(Node **head_queue,Node *last_task_node)
 {
-    int i=0;
-    printf("Actual list of task \n");
-
-    for(i=0;i<task_list->size_list;i++)
-    {
-        printf("%s %d %d \n",task_list->task_list[i].name,task_list->task_list[i].priority,task_list->task_list[i].burst);
-    }
-
-
+        if(*head_queue==NULL)
+            return NULL;
+        Job * job=malloc(sizeof(Job));
+        job->task_node=*head_queue;
+        job->time=(*head_queue)->task->burst;
+        delete(head_queue,(*head_queue)->task);
+        return job ;
 
 }
 
-void PRR(TaskList *task_list)
+Job *get_next_task(Node ** head_queue,int mode,Node * last_task_node)
 {
 
-
-}
-
-void schedule(int mode,TaskList *task_list)
-{
     switch(mode)
     {
 
     case 1:
-        FCFS(task_list);
-    break;
+        return FCFS(head_queue,last_task_node);
     case 2:
-        SJF(task_list);
-    break;
-
+        return SJF(head_queue,last_task_node);
     case 3:
-        PR(task_list);
-    break;
-
+        return PR(head_queue,last_task_node);
     case 4:
-        RR(task_list);
-    break;
-
+        return RR(head_queue,last_task_node);
     case 5:
-        PRR(task_list);
-    break;
+        order_by_priority(head_queue);
+        return RR(head_queue,last_task_node);
+    }
+    return NULL;
+}
 
+void schedule(int mode,Node **queue_head)
+{
+    Job * currentJobNode=NULL;
+    currentJobNode=get_next_task(queue_head,mode,currentJobNode==NULL ? NULL : currentJobNode->task_node);
+    while (currentJobNode!=NULL)
+    {
+        run(currentJobNode->task_node->task,currentJobNode->time);
+        currentJobNode=get_next_task(queue_head,mode,currentJobNode->task_node);
     }
 
 }

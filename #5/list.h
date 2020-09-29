@@ -11,6 +11,7 @@ struct node {
     Task *task;
     struct node *next;
 };
+typedef struct node Node;
 
 // insert and delete operations.
 void insert(struct node **head, Task *task);

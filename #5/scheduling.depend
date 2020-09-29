@@ -39,3 +39,47 @@
 1600897626 source:c:\users\marceus\desktop\leley\scheduling\schedulers.c
 	"schedulers.h"
 
+1601308709 source:c:\users\marceus\documents\devoir-os\#5\cpu.c
+	<stdio.h>
+	"task.h"
+
+1601128786 c:\users\marceus\documents\devoir-os\#5\task.h
+	<stdio.h>
+	<stdlib.h>
+
+1600892221 source:c:\users\marceus\documents\devoir-os\#5\details.c
+	"details.h"
+
+1600892245 c:\users\marceus\documents\devoir-os\#5\details.h
+	<stdlib.h>
+	<stdio.h>
+
+1601247938 source:c:\users\marceus\documents\devoir-os\#5\list.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"list.h"
+	"task.h"
+
+1601247958 c:\users\marceus\documents\devoir-os\#5\list.h
+	"task.h"
+
+1601308531 source:c:\users\marceus\documents\devoir-os\#5\driver.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"task.h"
+	"list.h"
+	"schedulers.h"
+	"details.h"
+
+1601308319 c:\users\marceus\documents\devoir-os\#5\schedulers.h
+	"task.h"
+	"list.h"
+	"cpu.h"
+
+1601308646 source:c:\users\marceus\documents\devoir-os\#5\schedulers.c
+	"schedulers.h"
+
+1600892035 c:\users\marceus\documents\devoir-os\#5\cpu.h
+

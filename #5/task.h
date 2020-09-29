@@ -17,10 +17,6 @@ typedef struct task {
     int burst;
 } Task;
 
-typedef struct TaskList {
-    Task task_list[100];
-    int size_list;
-}TaskList;
 
 #endif
 
