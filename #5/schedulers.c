@@ -9,6 +9,10 @@ void add(char *name, int priority, int burst,Node **queue_head)
     task->priority=priority;
     __sync_add_and_fetch(&task_id,1);
     task->tid=task_id;
+    task->reponse_time=0;
+    task->turnaround_time=burst;
+    task->waiting_time=0;
+    task->already_executed=0;
     insert(queue_head,task);
 
 }
@@ -248,13 +252,42 @@ Job *get_next_task(Node ** head_queue,int mode,Node * last_task_node)
 
 void schedule(int mode,Node **queue_head)
 {
+    //Copy linked  list to an array////////////////////
+    Node * tab_node[100]={NULL};
+    Node * temp=*queue_head;
+    int i=0;
+    while(temp!=NULL)
+    {
+        tab_node[i]=temp;
+        temp=temp->next;
+        i++;
+    }
+    //////////////////////////////////////////
+    Node * queue_head_temp = *queue_head;
     Job * currentJobNode=NULL;
     currentJobNode=get_next_task(queue_head,mode,currentJobNode==NULL ? NULL : currentJobNode->task_node);
+    if(currentJobNode!=NULL)
+    {
+        update_response_time_except(currentJobNode->task_node->task,*queue_head,currentJobNode->time);
+        update_waiting_time_except(currentJobNode->task_node->task,*queue_head,currentJobNode->time);
+        update_executing_time_for(currentJobNode->task_node->task,currentJobNode->time);
+    }
+
     while (currentJobNode!=NULL)
     {
         run(currentJobNode->task_node->task,currentJobNode->time);
         currentJobNode=get_next_task(queue_head,mode,currentJobNode->task_node);
+        if(currentJobNode!=NULL)
+        {
+            update_response_time_except(currentJobNode->task_node->task,*queue_head,currentJobNode->time);
+            update_waiting_time_except(currentJobNode->task_node->task,*queue_head,currentJobNode->time);
+            update_executing_time_for(currentJobNode->task_node->task,currentJobNode->time);
+        }
+
+
+
     }
+    print_statistics(tab_node,i);
 
 }
 

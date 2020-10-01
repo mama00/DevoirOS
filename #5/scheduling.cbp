@@ -50,6 +50,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="schedulers.h" />
+		<Unit filename="statistics.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="statistics.h" />
 		<Unit filename="task.h" />
 		<Extensions>
 			<code_completion />

@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     fclose(in);
 
     // invoke the scheduler
-    schedule(PRR,&task_queue);
+    schedule(FCFS,&task_queue);
     traverse(task_queue);
 
 

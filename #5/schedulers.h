@@ -6,7 +6,7 @@
 #include "task.h"
 #include "list.h"
 #include "cpu.h"
-
+#include "statistics.h"
 int task_id;
 typedef struct job
 {
