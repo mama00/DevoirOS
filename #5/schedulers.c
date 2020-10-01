@@ -19,7 +19,8 @@ void add(char *name, int priority, int burst,Node **queue_head)
 
 Job *PRR(Node **head_queue,Node *last_task_node)
 {
-
+    if((*head_queue)==NULL)
+        return NULL;
     int quantum_time=20;
     Job *job = malloc(sizeof(Job));
     if(last_task_node==NULL)
@@ -27,11 +28,13 @@ Job *PRR(Node **head_queue,Node *last_task_node)
         if((*head_queue)->task->priority==(*head_queue)->next->task->priority)
         {
             job->task_node=(*head_queue);
-            if((*head_queue)->task->burst<=quantum_time){
+            if((*head_queue)->task->burst<=quantum_time)
+            {
                 job->time=(*head_queue)->task->burst;
                 delete(head_queue,(*head_queue)->task);
             }
-            else{
+            else
+            {
                 job->time=quantum_time;
                 (*head_queue)->task->burst-=quantum_time;
             }
@@ -45,63 +48,106 @@ Job *PRR(Node **head_queue,Node *last_task_node)
     }
     else
     {
-        if(last_task_node->next->next==NULL)
+        if(last_task_node->next==NULL)
         {
-            if(last_task_node->next->task->priority==(*head_queue)->task->priority)
+            if((*head_queue)->next!=NULL)
             {
-                job->task_node=last_task_node->next;
-                if(last_task_node->next->task->burst<=quantum_time){
-                    job->time=last_task_node->next->task->burst;
-                    delete(head_queue,last_task_node->next->task);
+                if((*head_queue)->task->priority==(*head_queue)->next->task->priority)
+                {
+                    job->task_node=(*head_queue);
+                    if((*head_queue)->task->burst<=quantum_time)
+                    {
+                        job->time=(*head_queue)->task->burst;
+                        delete(head_queue,(*head_queue)->task);
+                    }
+                    else
+                    {
+                        job->time=quantum_time;
+                        (*head_queue)->task->burst-=quantum_time;
+                    }
                 }
-                else{
-                    job->time=quantum_time;
-                    last_task_node->next->task->burst-=quantum_time;
+                else
+                {
+                    job->task_node=(*head_queue);
+                    job->time=(*head_queue)->task->burst;
+                    delete(head_queue,(*head_queue)->task);
                 }
             }
             else
             {
-                job->task_node=last_task_node->next;
-                job->time=last_task_node->next->task->burst;
-                delete(head_queue,last_task_node->next->task);
-
+                job->task_node=(*head_queue);
+                job->time=(*head_queue)->task->burst;
+                delete(head_queue,(*head_queue)->task);
+                return job;
             }
+
         }
         else
         {
-            if(last_task_node->next->task->priority==last_task_node->next->next->task->priority)
+            if(last_task_node->next->next==NULL)
             {
-                job->task_node=last_task_node->next;
-                if(last_task_node->next->task->burst<=quantum_time){
+                if(last_task_node->next->task->priority==(*head_queue)->task->priority)
+                {
+                    job->task_node=last_task_node->next;
+                    if(last_task_node->next->task->burst<=quantum_time)
+                    {
+                        job->time=last_task_node->next->task->burst;
+                        delete(head_queue,last_task_node->next->task);
+                    }
+                    else
+                    {
+                        job->time=quantum_time;
+                        last_task_node->next->task->burst-=quantum_time;
+                    }
+                }
+                else
+                {
+                    job->task_node=last_task_node->next;
                     job->time=last_task_node->next->task->burst;
                     delete(head_queue,last_task_node->next->task);
-                }
-                else{
-                    job->time=quantum_time;
-                    last_task_node->next->task->burst-=quantum_time;
+
                 }
             }
             else
             {
-                job->task_node=last_task_node->next;
-                job->time=last_task_node->next->task->burst;
-                delete(head_queue,last_task_node->next->task);
+                if(last_task_node->next->task->priority==last_task_node->next->next->task->priority)
+                {
+                    job->task_node=last_task_node->next;
+                    if(last_task_node->next->task->burst<=quantum_time)
+                    {
+                        job->time=last_task_node->next->task->burst;
+                        delete(head_queue,last_task_node->next->task);
+                    }
+                    else
+                    {
+                        job->time=quantum_time;
+                        last_task_node->next->task->burst-=quantum_time;
+                    }
+                }
+                else
+                {
+                    job->task_node=last_task_node->next;
+                    job->time=last_task_node->next->task->burst;
+                    delete(head_queue,last_task_node->next->task);
 
+                }
             }
         }
+
 
     }
     return job;
 }
 
-int cmp (const void * a, const void * b ) {
+int cmp (const void * a, const void * b )
+{
     const Node **pa = (const Node**)a;
     const Node **pb = (const Node**)b;
     return (*pa)->task->priority-(*pb)->task->priority;
 }
 void order_by_priority(Node **head_queue)
 {
-    Node * tab_node[20]={NULL};
+    Node * tab_node[20]= {NULL};
     int i=0;
     while((*head_queue)!=NULL)
     {
@@ -159,16 +205,16 @@ Job *RR(Node **head_queue,Node *last_task_node)
     }
     else
     {
-            job->task_node=*head_queue;
-            job->time=quantum_time;
-            (*head_queue)->task->burst-=quantum_time;
-            if((*head_queue)->task->burst<=0)
-            {
-                job->time=(*head_queue)->task->burst+20;
-                (*head_queue)->task->burst=0;
-                delete(head_queue,(*head_queue)->task);
-            }
-            return job;
+        job->task_node=*head_queue;
+        job->time=quantum_time;
+        (*head_queue)->task->burst-=quantum_time;
+        if((*head_queue)->task->burst<=0)
+        {
+            job->time=(*head_queue)->task->burst+20;
+            (*head_queue)->task->burst=0;
+            delete(head_queue,(*head_queue)->task);
+        }
+        return job;
     }
 }
 
@@ -219,13 +265,13 @@ Job *SJF(Node **head_queue,Node *last_task_node)
 
 Job *FCFS(Node **head_queue,Node *last_task_node)
 {
-        if(*head_queue==NULL)
-            return NULL;
-        Job * job=malloc(sizeof(Job));
-        job->task_node=*head_queue;
-        job->time=(*head_queue)->task->burst;
-        delete(head_queue,(*head_queue)->task);
-        return job ;
+    if(*head_queue==NULL)
+        return NULL;
+    Job * job=malloc(sizeof(Job));
+    job->task_node=*head_queue;
+    job->time=(*head_queue)->task->burst;
+    delete(head_queue,(*head_queue)->task);
+    return job ;
 
 }
 
@@ -245,7 +291,7 @@ Job *get_next_task(Node ** head_queue,int mode,Node * last_task_node)
         return RR(head_queue,last_task_node);
     case 5:
         order_by_priority(head_queue);
-        return RR(head_queue,last_task_node);
+        return PRR(head_queue,last_task_node);
     }
     return NULL;
 }
@@ -253,7 +299,7 @@ Job *get_next_task(Node ** head_queue,int mode,Node * last_task_node)
 void schedule(int mode,Node **queue_head)
 {
     //Copy linked  list to an array////////////////////
-    Node * tab_node[100]={NULL};
+    Node * tab_node[100]= {NULL};
     Node * temp=*queue_head;
     int i=0;
     while(temp!=NULL)
@@ -263,7 +309,6 @@ void schedule(int mode,Node **queue_head)
         i++;
     }
     //////////////////////////////////////////
-    Node * queue_head_temp = *queue_head;
     Job * currentJobNode=NULL;
     currentJobNode=get_next_task(queue_head,mode,currentJobNode==NULL ? NULL : currentJobNode->task_node);
     if(currentJobNode!=NULL)

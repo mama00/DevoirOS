@@ -8,5 +8,5 @@
 
 // run this task for the specified time slice
 void run(Task *task, int slice) {
-    printf("Running task = id:[%d] name:[%s] priority:[%d] burst:[%d] for %d units.\n",task->tid,task->name, task->priority, task->burst, slice);
+    printf("Running task = id:[%d] name:[%s] priority:[%d]  for %d units.\n",task->tid,task->name, task->priority, slice);
 }

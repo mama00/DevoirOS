@@ -39,7 +39,7 @@
 1600897626 source:c:\users\marceus\desktop\leley\scheduling\schedulers.c
 	"schedulers.h"
 
-1601308709 source:c:\users\marceus\documents\devoir-os\#5\cpu.c
+1601560254 source:c:\users\marceus\documents\devoir-os\#5\cpu.c
 	<stdio.h>
 	"task.h"
 
@@ -64,7 +64,7 @@
 1601247958 c:\users\marceus\documents\devoir-os\#5\list.h
 	"task.h"
 
-1601557073 source:c:\users\marceus\documents\devoir-os\#5\driver.c
+1601557884 source:c:\users\marceus\documents\devoir-os\#5\driver.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -79,7 +79,7 @@
 	"cpu.h"
 	"statistics.h"
 
-1601557528 source:c:\users\marceus\documents\devoir-os\#5\schedulers.c
+1601559546 source:c:\users\marceus\documents\devoir-os\#5\schedulers.c
 	"schedulers.h"
 
 1600892035 c:\users\marceus\documents\devoir-os\#5\cpu.h
