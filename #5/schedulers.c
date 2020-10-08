@@ -77,7 +77,6 @@ Job *PRR(Node **head_queue,Node *last_task_node)
                 // next have same priority of last
                 if((*head_queue)->task->priority==last_task_node->next->task->priority)
                 {
-                    printf("fd\n");
                     job->task_node=last_task_node->next;
                     int time= job->task_node->task->burst>quantum_time?quantum_time:job->task_node->task->burst;
                     job->time=time;
@@ -87,7 +86,6 @@ Job *PRR(Node **head_queue,Node *last_task_node)
                 }
                 else
                 {
-                    printf("ff\n");
                     job->task_node=*head_queue;
                     int time= job->task_node->task->burst>quantum_time?quantum_time:job->task_node->task->burst;
                     job->time=time;
@@ -275,7 +273,6 @@ Job *get_next_task(Node ** head_queue,int mode,Node * last_task_node)
     case 4:
         return RR(head_queue,last_task_node);
     case 5:
-        traverse(*head_queue);
         return PRR(head_queue,last_task_node);
     }
     return NULL;
