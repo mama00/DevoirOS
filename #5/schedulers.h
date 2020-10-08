@@ -8,6 +8,7 @@
 #include "cpu.h"
 #include "statistics.h"
 int task_id;
+Node * list_queue_prr[10];
 typedef struct job
 {
     Node * task_node;
@@ -20,5 +21,7 @@ void add(char *name, int priority, int burst,Node **queue_head);
 void schedule(int ,Node **queue_head);
 
 Job * get_next_task(Node **,int,Node *);
+
+void init();
 
 #endif // SCHEDULERS_H_INCLUDED

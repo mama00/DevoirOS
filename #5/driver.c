@@ -26,7 +26,7 @@
 int main(int argc, char *argv[])
 {
     // init tasks ids
-    task_id=0;
+    init();
     FILE *in;
     char *temp;
     char task[SIZE];
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     fclose(in);
 
     // invoke the scheduler
-    schedule(FCFS,&task_queue);
+    schedule(PRR,&task_queue);
     traverse(task_queue);
 
 
