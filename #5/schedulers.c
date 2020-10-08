@@ -77,6 +77,7 @@ Job *PRR(Node **head_queue,Node *last_task_node)
                 // next have same priority of last
                 if((*head_queue)->task->priority==last_task_node->next->task->priority)
                 {
+                    printf("fd\n");
                     job->task_node=last_task_node->next;
                     int time= job->task_node->task->burst>quantum_time?quantum_time:job->task_node->task->burst;
                     job->time=time;
@@ -86,6 +87,7 @@ Job *PRR(Node **head_queue,Node *last_task_node)
                 }
                 else
                 {
+                    printf("ff\n");
                     job->task_node=*head_queue;
                     int time= job->task_node->task->burst>quantum_time?quantum_time:job->task_node->task->burst;
                     job->time=time;
@@ -96,12 +98,24 @@ Job *PRR(Node **head_queue,Node *last_task_node)
             }
             else // next == next next task
             {
-                job->task_node=last_task_node->next;
-                int time= job->task_node->task->burst>quantum_time?quantum_time:job->task_node->task->burst;
-                job->time=time;
-                job->task_node->task->burst-=time;
-                if(job->task_node->task->burst==0)
-                    delete(head_queue,job->task_node->task);
+                if(last_task_node->next->task->priority<(*head_queue)->task->priority)
+                {
+                    job->task_node=(*head_queue);
+                    int time= job->task_node->task->burst>quantum_time?quantum_time:job->task_node->task->burst;
+                    job->time=time;
+                    job->task_node->task->burst-=time;
+                    if(job->task_node->task->burst==0)
+                        delete(head_queue,job->task_node->task);
+                }
+                else
+                {
+                    job->task_node=last_task_node->next;
+                    int time= job->task_node->task->burst>quantum_time?quantum_time:job->task_node->task->burst;
+                    job->time=time;
+                    job->task_node->task->burst-=time;
+                    if(job->task_node->task->burst==0)
+                        delete(head_queue,job->task_node->task);
+                }
 
             }
         }
